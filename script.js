@@ -11,7 +11,6 @@ window.onload = function() {
         tasks.forEach((task, i) => {
             displayTask(task, i);
         });
-        }
     }
 };
 
