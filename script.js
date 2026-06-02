@@ -8,8 +8,9 @@ window.onload = function() {
     if(savedTasks) {
         tasks = JSON.parse(savedTasks);
 
-        for(let task of tasks) {
-            displayTask(task);
+        tasks.forEach((task, i) => {
+            displayTask(task, i);
+        });
         }
     }
 };
@@ -27,17 +28,40 @@ function addTask() {
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
-    displayTask(task);
+    displayTask(task,tasks.length-1);
 
     document.getElementById("TI").value = "";
 }
 
 // Display Task
-function displayTask(task) {
+function displayTask(task, index) {
 
     let li = document.createElement("li");
 
-    li.innerText = task;
+    li.innerText = task + " ";
+
+    let deleteBtn = document.createElement("button");
+
+    deleteBtn.innerText = "Delete";
+
+    deleteBtn.onclick = function() {
+        deleteTask(index);
+    };
+
+    li.appendChild(deleteBtn);
 
     document.getElementById("taskList").appendChild(li);
+}
+//delete function
+function deleteTask(index) {
+
+    tasks.splice(index, 1);
+
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+
+    document.getElementById("taskList").innerHTML = "";
+
+    tasks.forEach((task, i) => {
+        displayTask(task, i);
+    });
 }
