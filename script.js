@@ -23,7 +23,10 @@ function addTask() {
         return;
     }
 
-    tasks.push(task);
+    tasks.push({
+        text:task,
+        completed:false
+    });
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
@@ -37,7 +40,9 @@ function displayTask(task, index) {
 
     let li = document.createElement("li");
 
-    li.innerText = task + " ";
+    li.innerText =
+    (task.completed ? "☑ " : "☐ ")
+    + task.text + " ";
 
     let deleteBtn = document.createElement("button");
 
@@ -62,5 +67,23 @@ function deleteTask(index) {
 
     tasks.forEach((task, i) => {
         displayTask(task, i);
+    });
+}
+function toggleComplete(index){
+
+    tasks[index].completed =
+    !tasks[index].completed;
+
+    localStorage.setItem(
+        "tasks",
+        JSON.stringify(tasks)
+    );
+
+    document.getElementById(
+        "taskList"
+    ).innerHTML = "";
+
+    tasks.forEach((task,i)=>{
+        displayTask(task,i);
     });
 }
