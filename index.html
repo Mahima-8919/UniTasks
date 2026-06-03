@@ -9,7 +9,8 @@
     <h1>UniTasks</h1>
     <div class="input-area">
       <input type="text" id="TI" placeholder="Enter a task">
-      <input type="number" id="reminderHours" placeholder="Enter reminder hours" min="1">
+      <input type="number" id="reminderHours" placeholder="Hours" min="0">
+      <input type="number" id="reminderMins" placeholder="Minutes" min="0" max="59">
       <button onclick="addTask()">Add Task</button>
     </div>
     <ul id="taskList"></ul>
