@@ -2,12 +2,9 @@ let tasks = [];
 
 // Load tasks when page opens
 window.onload = function () {
-
     let savedTasks = localStorage.getItem("tasks");
-
     if (savedTasks) {
         tasks = JSON.parse(savedTasks);
-
         tasks.forEach((task, i) => {
             displayTask(task, i);
         });
@@ -16,12 +13,8 @@ window.onload = function () {
 
 // Add Task
 function addTask() {
-
     let task = document.getElementById("TI").value;
-
-    if (task === "") {
-        return;
-    }
+    if (task === "") return;
 
     let hours = document.getElementById("reminderHours").value;
     let mins = document.getElementById("reminderMins").value;
@@ -33,11 +26,9 @@ function addTask() {
         reminderMins: mins ? parseInt(mins) : 1,
         addedTime: Date.now()
     });
-    
+
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
     displayTask(tasks[tasks.length - 1], tasks.length - 1);
-
     document.getElementById("TI").value = "";
     document.getElementById("reminderHours").value = "";
     document.getElementById("reminderMins").value = "";
@@ -45,7 +36,6 @@ function addTask() {
 
 // Display Task
 function displayTask(task, index) {
-
     let li = document.createElement("li");
 
     let span = document.createElement("span");
@@ -55,23 +45,13 @@ function displayTask(task, index) {
     li.appendChild(span);
 
     let completeBtn = document.createElement("button");
-
     completeBtn.innerText = "Complete";
-
-    completeBtn.onclick = function () {
-        toggleComplete(index);
-    };
-
+    completeBtn.onclick = function () { toggleComplete(index); };
     li.appendChild(completeBtn);
 
     let deleteBtn = document.createElement("button");
-
     deleteBtn.innerText = "Delete";
-
-    deleteBtn.onclick = function () {
-        deleteTask(index);
-    };
-
+    deleteBtn.onclick = function () { deleteTask(index); };
     li.appendChild(deleteBtn);
 
     document.getElementById("taskList").appendChild(li);
@@ -79,56 +59,40 @@ function displayTask(task, index) {
 
 // Delete Task
 function deleteTask(index) {
-
     tasks.splice(index, 1);
-
     localStorage.setItem("tasks", JSON.stringify(tasks));
-
     document.getElementById("taskList").innerHTML = "";
-
-    tasks.forEach((task, i) => {
-        displayTask(task, i);
-    });
+    tasks.forEach((task, i) => { displayTask(task, i); });
 }
 
 // Complete Task
 function toggleComplete(index) {
-
-    tasks[index].completed =
-        !tasks[index].completed;
-
-    localStorage.setItem(
-        "tasks",
-        JSON.stringify(tasks)
-    );
-
+    tasks[index].completed = !tasks[index].completed;
+    localStorage.setItem("tasks", JSON.stringify(tasks));
     document.getElementById("taskList").innerHTML = "";
-
-    tasks.forEach((task, i) => {
-        displayTask(task, i);
-    });
+    tasks.forEach((task, i) => { displayTask(task, i); });
 }
+
 // Request notification permission
 Notification.requestPermission();
 
 // Check tasks every minute
 setInterval(function () {
-
     let now = Date.now();
-
     tasks.forEach(function (task) {
-
         if (task.completed) return;
 
         let elapsed = now - task.addedTime;
         let reminderInterval = ((task.reminderHours * 60) + task.reminderMins) * 60 * 1000;
 
         if (elapsed >= reminderInterval) {
-
-            // Browser notification
-            new Notification("UniTasks Reminder 🔔", {
-                body: "Task not done yet: " + task.text
-        });
+            if ("Notification" in window && Notification.permission === "granted") {
+                new Notification("UniTasks Reminder 🔔", {
+                    body: "Task not done yet: " + task.text
+                });
+            } else {
+                alert("⏰ UniTasks Reminder!\nTask not done yet: " + task.text);
+            }
 
             // Sound alert
             let audio = new AudioContext();
@@ -137,27 +101,20 @@ setInterval(function () {
             beep.start();
             beep.stop(audio.currentTime + 0.5);
 
-            // Reset timer so it reminds again next interval
+            // Reset timer
             task.addedTime = Date.now();
             localStorage.setItem("tasks", JSON.stringify(tasks));
         }
     });
+}, 60000);
 
-}, 60000); // runs every 60 seconds
+// Test Reminder
 function testReminder() {
-    if (Notification.permission === "granted") {
+    if ("Notification" in window && Notification.permission === "granted") {
         new Notification("UniTasks Reminder 🔔", {
             body: "Test notification!"
         });
     } else {
-        Notification.requestPermission().then(function(permission) {
-            if (permission === "granted") {
-                new Notification("UniTasks Reminder 🔔", {
-                    body: "Test notification!"
-                });
-            } else {
-                alert("Please allow notifications!");
-            }
-        });
+        alert("⏰ UniTasks Reminder!\nTest notification!");
     }
 }
