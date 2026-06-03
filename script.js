@@ -1,4 +1,14 @@
 let tasks = [];
+let swReg;
+
+// Register Service Worker
+Notification.requestPermission();
+
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js').then(function(reg) {
+        swReg = reg;
+    });
+}
 
 // Load tasks when page opens
 window.onload = function () {
@@ -73,9 +83,6 @@ function toggleComplete(index) {
     tasks.forEach((task, i) => { displayTask(task, i); });
 }
 
-// Request notification permission
-Notification.requestPermission();
-
 // Check tasks every minute
 setInterval(function () {
     let now = Date.now();
@@ -86,8 +93,8 @@ setInterval(function () {
         let reminderInterval = ((task.reminderHours * 60) + task.reminderMins) * 60 * 1000;
 
         if (elapsed >= reminderInterval) {
-            if ("Notification" in window && Notification.permission === "granted") {
-                new Notification("UniTasks Reminder 🔔", {
+            if (swReg) {
+                swReg.showNotification("UniTasks Reminder 🔔", {
                     body: "Task not done yet: " + task.text
                 });
             } else {
@@ -110,8 +117,8 @@ setInterval(function () {
 
 // Test Reminder
 function testReminder() {
-    if ("Notification" in window && Notification.permission === "granted") {
-        new Notification("UniTasks Reminder 🔔", {
+    if (swReg) {
+        swReg.showNotification("UniTasks Reminder 🔔", {
             body: "Test notification!"
         });
     } else {
