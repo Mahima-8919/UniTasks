@@ -37,6 +37,7 @@ function addTask() {
     displayTask(tasks[tasks.length - 1], tasks.length - 1);
 
     document.getElementById("TI").value = "";
+    document.getElementById("reminderHours").value = "";
 }
 
 // Display Task
@@ -102,3 +103,38 @@ function toggleComplete(index) {
         displayTask(task, i);
     });
 }
+// Request notification permission
+Notification.requestPermission();
+
+// Check tasks every minute
+setInterval(function () {
+
+    let now = Date.now();
+
+    tasks.forEach(function (task) {
+
+        if (task.completed) return;
+
+        let hoursPassed = (now - task.addedTime) / (1000 * 60 * 60);
+
+        if (hoursPassed >= task.reminderHours) {
+
+            // Browser notification
+            new Notification("UniTasks Reminder 🔔", {
+                body: "Task not done yet: " + task.text
+            });
+
+            // Sound alert
+            let audio = new AudioContext();
+            let beep = audio.createOscillator();
+            beep.connect(audio.destination);
+            beep.start();
+            beep.stop(audio.currentTime + 0.5);
+
+            // Reset timer so it reminds again next interval
+            task.addedTime = Date.now();
+            localStorage.setItem("tasks", JSON.stringify(tasks));
+        }
+    });
+
+}, 60000); // runs every 60 seconds
