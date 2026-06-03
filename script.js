@@ -145,7 +145,19 @@ setInterval(function () {
 
 }, 60000); // runs every 60 seconds
 function testReminder() {
-    new Notification("UniTasks Reminder 🔔", {
-        body: "Test notification!"
-    });
+    if (Notification.permission === "granted") {
+        new Notification("UniTasks Reminder 🔔", {
+            body: "Test notification!"
+        });
+    } else {
+        Notification.requestPermission().then(function(permission) {
+            if (permission === "granted") {
+                new Notification("UniTasks Reminder 🔔", {
+                    body: "Test notification!"
+                });
+            } else {
+                alert("Please allow notifications!");
+            }
+        });
+    }
 }
