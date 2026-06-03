@@ -23,9 +23,13 @@ function addTask() {
         return;
     }
 
+    let hours = document.getElementById("reminderHours").value;
+
     tasks.push({
         text: task,
-        completed: false
+        completed: false,
+        reminderHours: hours ? parseInt(hours) : 1,
+        addedTime: Date.now()
     });
 
     localStorage.setItem("tasks", JSON.stringify(tasks));
