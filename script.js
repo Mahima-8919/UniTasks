@@ -49,7 +49,7 @@ function displayTask(task, index) {
     let li = document.createElement("li");
 
     let span = document.createElement("span");
-    span.innerText = (task.completed ? "☑ " : "☐ ") + task.text + " ⏰ " + task.reminderHours + "h";
+    span.innerText = (task.completed ? "☑ " : "☐ ") + task.text + " ⏰ " + task.reminderHours + "h " + task.reminderMins + "m";
     span.style.textDecoration = task.completed ? "line-through" : "none";
     span.style.color = task.completed ? "#aaa" : "#333";
     li.appendChild(span);
@@ -120,14 +120,15 @@ setInterval(function () {
 
         if (task.completed) return;
 
-        let hoursPassed = (now - task.addedTime) / (1000 * 60 * 60);
+        let elapsed = now - task.addedTime;
+        let reminderInterval = ((task.reminderHours * 60) + task.reminderMins) * 60 * 1000;
 
-        if (hoursPassed >= task.reminderHours) {
+        if (elapsed >= reminderInterval) {
 
             // Browser notification
             new Notification("UniTasks Reminder 🔔", {
                 body: "Task not done yet: " + task.text
-            });
+        });
 
             // Sound alert
             let audio = new AudioContext();
