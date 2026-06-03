@@ -114,14 +114,3 @@ setInterval(function () {
         }
     });
 }, 60000);
-
-// Test Reminder
-function testReminder() {
-    if (swReg) {
-        swReg.showNotification("UniTasks Reminder 🔔", {
-            body: "Test notification!"
-        });
-    } else {
-        alert("⏰ UniTasks Reminder!\nTest notification!");
-    }
-}
