@@ -45,9 +45,11 @@ function displayTask(task, index) {
 
     let li = document.createElement("li");
 
-    li.innerText =
-        (task.completed ? "☑ " : "☐ ")
-        + task.text + " ";
+    let span = document.createElement("span");
+    span.innerText = (task.completed ? "☑ " : "☐ ") + task.text;
+    span.style.textDecoration = task.completed ? "line-through" : "none";
+    span.style.color = task.completed ? "#aaa" : "#333";
+    li.appendChild(span);
 
     let completeBtn = document.createElement("button");
 
