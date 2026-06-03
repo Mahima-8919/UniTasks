@@ -24,20 +24,23 @@ function addTask() {
     }
 
     let hours = document.getElementById("reminderHours").value;
+    let mins = document.getElementById("reminderMins").value;
 
     tasks.push({
         text: task,
         completed: false,
-        reminderHours: hours ? parseInt(hours) : 1,
+        reminderHours: hours ? parseInt(hours) : 0,
+        reminderMins: mins ? parseInt(mins) : 1,
         addedTime: Date.now()
     });
-
+    
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
     displayTask(tasks[tasks.length - 1], tasks.length - 1);
 
     document.getElementById("TI").value = "";
     document.getElementById("reminderHours").value = "";
+    document.getElementById("reminderMins").value = "";
 }
 
 // Display Task
