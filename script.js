@@ -144,3 +144,8 @@ setInterval(function () {
     });
 
 }, 60000); // runs every 60 seconds
+function testReminder() {
+    new Notification("UniTasks Reminder 🔔", {
+        body: "Test notification!"
+    });
+}
