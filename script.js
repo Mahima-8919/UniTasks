@@ -46,7 +46,7 @@ function displayTask(task, index) {
     let li = document.createElement("li");
 
     let span = document.createElement("span");
-    span.innerText = (task.completed ? "☑ " : "☐ ") + task.text;
+    span.innerText = (task.completed ? "☑ " : "☐ ") + task.text + " ⏰ every " + task.reminderHours + "h";
     span.style.textDecoration = task.completed ? "line-through" : "none";
     span.style.color = task.completed ? "#aaa" : "#333";
     li.appendChild(span);
